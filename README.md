@@ -22,7 +22,7 @@ maupun analitik.
 
 ## Mengedit
 
-- **Inisial:** ubah `<h1>N.</h1>` dan `<span class="mark">N.</span>`.
+- **Inisial:** ubah `<h1>L.</h1>` dan `<span class="mark">L.</span>`.
 - **Tagline:** sunting `.tagline` di `index.html`.
 - **Catatan:** sunting paragraf di dalam `<section class="note">`.
 - **Kontak:** ganti tautan di bagian `.contact`.
