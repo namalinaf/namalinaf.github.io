@@ -880,6 +880,51 @@ function exportWordDocument() {
   URL.revokeObjectURL(url);
 }
 
+// Unduh Template Resmi IHK Tahun Lalu (bawaan SISADA dengan placeholder '.')
+function downloadPlaceholderTemplate() {
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+    const link = document.createElement("a");
+    link.href = "IHK_Tahun_Lalu.xlsx";
+    link.download = "IHK_Tahun_Lalu.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    // Fallback file:// lokal menggunakan SheetJS
+    if (window.XLSX) {
+      const ws_data = [
+        ["TABEL INDEKS HARGA KONSUMEN (IHK) TAHUN LALU"],
+        [],
+        ["Kode Komoditas", "Nama Komoditas", "Flag", "IHK Tahun Lalu"],
+        ["0", "UMUM", 0, "."],
+        ["01", "MAKANAN, MINUMAN DAN TEMBAKAU", 1, "."],
+        ["02", "PAKAIAN DAN ALAS KAKI", 1, "."],
+        ["03", "PERUMAHAN, AIR, LISTRIK, DAN BAHAN BAKAR RUMAH TANGGA", 1, "."],
+        ["04", "PERLENGKAPAN, PERALATAN DAN PEMELIHARAAN RUTIN RUMAH TANGGA", 1, "."],
+        ["05", "KESEHATAN", 1, "."],
+        ["06", "TRANSPORTASI", 1, "."],
+        ["07", "INFORMASI, KOMUNIKASI, DAN JASA KEUANGAN", 1, "."],
+        ["08", "REKREASI, OLAHRAGA, DAN BUDAYA", 1, "."],
+        ["09", "PENDIDIKAN", 1, "."],
+        ["10", "PENYEDIAAN MAKANAN DAN MINUMAN/RESTORAN ", 1, "."],
+        ["11", "PERAWATAN PRIBADI DAN JASA LAINNYA", 1, "."]
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      ws['!cols'] = [{ wch: 16 }, { wch: 68 }, { wch: 6 }, { wch: 15 }];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, "IHK_Tahun_Lalu.xlsx");
+    } else {
+      const link = document.createElement("a");
+      link.href = "IHK_Tahun_Lalu.xlsx";
+      link.download = "IHK_Tahun_Lalu.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+}
+
 // Event Listeners & Drag Drop
 document.addEventListener("DOMContentLoaded", () => {
   // Setup file uploads
@@ -887,6 +932,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileTemplate = document.getElementById("input-file-template");
   const btnProcess = document.getElementById("btn-process-upload");
   const btnLoadSample = document.getElementById("btn-load-sample");
+  const btnDownloadTemplate = document.getElementById("btn-download-template");
+
+  if (btnDownloadTemplate) {
+    btnDownloadTemplate.addEventListener("click", () => {
+      downloadPlaceholderTemplate();
+    });
+  }
 
   if (filePusat) {
     filePusat.addEventListener("change", (e) => {
