@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAKIT — Otomatisasi BRS IHK | BPS</title>
+  <meta name="description" content="RAKIT: Rangkai Angka dan Kompilasi IHK Terpadu — Solusi otomatisasi penyusunan Berita Resmi Statistik (BRS) Indeks Harga Konsumen.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-badge">RAKIT</span>
+        <div class="brand-info">
+          <h1>RAKIT — BRS IHK</h1>
+          <p>Rangkai Angka dan Kompilasi IHK Terpadu &bull; BPS</p>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <div class="select-group">
+          <label for="select-region">Wilayah:</label>
+          <select id="select-region" class="select-input">
+            <option value="00">00 — Nasional (90 Kota IHK)</option>
+            <option value="31">31 — DKI Jakarta</option>
+            <option value="32">32 — Jawa Barat</option>
+            <option value="35">35 — Jawa Timur</option>
+            <option value="12">12 — Sumatera Utara</option>
+            <option value="73">73 — Sulawesi Selatan</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label for="select-period">Periode:</label>
+          <select id="select-period" class="select-input">
+            <option value="2026_10">Oktober 2026</option>
+            <option value="2026_09" disabled>September 2026 (Arsip)</option>
+          </select>
+        </div>
+
+        <div class="status-actions">
+          <button id="btn-export-doc" class="btn btn-outline btn-sm">
+            📄 Unduh Word
+          </button>
+          <button id="btn-print-doc" class="btn btn-primary btn-sm">
+            🖨️ Cetak / PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sub Navigation Tabs -->
+  <nav class="sub-nav">
+    <ul class="tab-list">
+      <li><button class="tab-btn active" data-tab="workspace">✏️ Susun BRS</button></li>
+      <li><button class="tab-btn" data-tab="data-table">📋 Rincian Tabel & Simulasi</button></li>
+      <li><button class="tab-btn" data-tab="full-doc">📖 Pratinjau Dokumen BRS</button></li>
+      <li><button class="tab-btn" data-tab="about">ℹ️ Metodologi & Panduan</button></li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Status & Validation Live Bar -->
+    <section class="status-bar">
+      <div class="status-pills">
+        <span class="pill pill-success">✓ Data Tervalidasi</span>
+        <span id="pill-bobot" class="pill pill-success">Bobot: 100,00% ✓</span>
+        <span id="pill-rekon" class="pill pill-success">Rekonsiliasi: 0,00% ✓</span>
+        <span class="pill pill-info">Tahun Dasar 2022=100</span>
+      </div>
+      <div>
+        <span style="font-size: 0.8rem; color: var(--gray-500);">Status Naskah:</span>
+        <strong style="font-size: 0.82rem; color: var(--primary);">DRAF TERVERIFIKASI</strong>
+      </div>
+    </section>
+
+    <!-- TAB 1: Susun BRS (3-Panel Workspace) -->
+    <section id="tab-workspace" class="tab-content">
+      <div class="workspace-grid">
+
+        <!-- Panel 1: Parameter & Metrik Ringkas -->
+        <aside class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">📊 Indikator Utama</h2>
+            <span class="pill pill-info" style="font-size: 0.7rem;">Live</span>
+          </div>
+          <div class="panel-body">
+            <div class="metrics-grid">
+              
+              <div class="metric-card">
+                <div class="metric-label">Indeks Harga Konsumen (IHK)</div>
+                <div class="metric-value-row">
+                  <span id="val-ihk" class="metric-val">106,85</span>
+                  <span class="metric-tag tag-stabil">Poin</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Inflasi Bulanan (m-to-m)</div>
+                <div class="metric-value-row">
+                  <span id="val-mtm" class="metric-val">0,26%</span>
+                  <span id="tag-mtm" class="metric-tag tag-inflasi">Inflasi</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Inflasi Thn Kalender (y-t-d)</div>
+                <div class="metric-value-row">
+                  <span id="val-ytd" class="metric-val">1,86%</span>
+                  <span class="metric-tag tag-inflasi">Thn Kalender</span>
+                </div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-label">Inflasi Thn ke Thn (y-on-y)</div>
+                <div class="metric-value-row">
+                  <span id="val-yoy" class="metric-val">2,62%</span>
+                  <span class="metric-tag tag-inflasi">y-on-y</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Validation Checklist -->
+            <div class="checklist">
+              <div class="checklist-title">Pemeriksaan Kualitas Naskah</div>
+              <div class="check-item">
+                <span class="check-icon">✓</span>
+                <span>Seluruh 11 kelompok pengeluaran lengkap</span>
+              </div>
+              <div class="check-item">
+                <span class="check-icon">✓</span>
+                <span>Total bobot tertimbang tepat 100,00</span>
+              </div>
+              <div class="check-item">
+                <span class="check-icon">✓</span>
+                <span>Jumlah andil = inflasi umum headline</span>
+              </div>
+              <div class="check-item">
+                <span class="check-icon">✓</span>
+                <span>Angka di narasi sinkron 100% dengan tabel</span>
+              </div>
+              <div class="check-item">
+                <span class="check-icon">✓</span>
+                <span>Penandaan inflasi vs deflasi akurat</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Panel 2: Editor Narasi Cerdas -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">✍️ Generator Narasi BRS</h2>
+            <div class="status-actions">
+              <button id="btn-reset-narrative" class="btn btn-outline btn-sm" title="Generate ulang teks narasi dari data">
+                🔄 Regenerate
+              </button>
+              <button id="btn-copy-narrative" class="btn btn-primary btn-sm" title="Salin seluruh isi narasi ke clipboard">
+                📋 Salin Teks
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="editor-toolbar">
+              <span style="font-size: 0.78rem; color: var(--gray-500); align-self: center;">
+                Badge warna menunjukkan angka terkunci yang otomatis sinkron dengan data:
+              </span>
+            </div>
+            <!-- Interactive Narrative Box -->
+            <div id="narrative-editor" class="narrative-box" contenteditable="true">
+              <!-- Terisi oleh script -->
+            </div>
+            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.65rem;">
+              💡 <em>Catatan: Anda dapat mengedit kalimat langsung di kotak atas jika ingin menambahkan catatan khusus lapangan. Klik "Regenerate" untuk kembali ke draf sistem.</em>
+            </p>
+          </div>
+        </section>
+
+        <!-- Panel 3: Pratinjau Dokumen Siap Cetak -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">📄 Pratinjau Dokumen Resmi</h2>
+            <span style="font-size: 0.78rem; color: var(--gray-500);">Format A4 BPS</span>
+          </div>
+          <div class="panel-body" style="background: var(--gray-100); padding: 1rem; overflow-y: auto; max-height: 800px;">
+            
+            <div id="brs-printable-document" class="brs-preview-paper">
+              <!-- Dokumen Kop Resmi BPS -->
+              <div class="brs-doc-header">
+                <div>
+                  <div class="brs-bps-brand">BADAN PUSAT STATISTIK</div>
+                  <div id="doc-reg-name" style="font-size: 0.82rem; font-weight: 700; color: #475569;">NASIONAL</div>
+                </div>
+                <div class="brs-doc-meta">
+                  <div id="doc-no-brs" style="font-weight: 700;">No. 72/11/Th. XXIX</div>
+                  <div id="doc-tgl">2 November 2026</div>
+                </div>
+              </div>
+
+              <!-- Judul Publikasi Resmi -->
+              <div class="brs-doc-title">
+                BERITA RESMI STATISTIK
+                <span id="doc-sub-title" class="sub">PERKEMBANGAN INDEKS HARGA KONSUMEN / INFLASI NASIONAL</span>
+                <span id="doc-periode-title" class="sub" style="font-weight: 800; color: #0284c7;">OKTOBER 2026</span>
+              </div>
+
+              <!-- Isi Narasi -->
+              <div id="doc-narrative-content" style="line-height: 1.65; margin-bottom: 1.25rem; font-size: 0.88rem;">
+                <!-- Auto sync -->
+              </div>
+
+              <!-- Visualisasi Andil Kelompok -->
+              <div class="chart-container">
+                <div class="chart-title">Andil Inflasi Menurut Kelompok Pengeluaran Terbesar (%)</div>
+                <div id="chart-bars">
+                  <!-- Auto bars -->
+                </div>
+              </div>
+
+              <!-- Tabel 1. IHK dan Tingkat Inflasi -->
+              <div style="margin-top: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.82rem; margin-bottom: 0.35rem;">
+                  Tabel 1. Indeks Harga Konsumen dan Tingkat Inflasi Menurut Kelompok Pengeluaran (2022=100)
+                </div>
+                <div class="data-table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th rowspan="2" style="width: 35px;">Kode</th>
+                        <th rowspan="2">Kelompok Pengeluaran</th>
+                        <th rowspan="2" style="width: 55px;">Bobot</th>
+                        <th rowspan="2" style="width: 60px;">IHK</th>
+                        <th colspan="3">Tingkat Inflasi (%)</th>
+                        <th rowspan="2" style="width: 55px;">Andil (%)</th>
+                      </tr>
+                      <tr>
+                        <th style="width: 55px;">m-t-m</th>
+                        <th style="width: 55px;">y-t-d</th>
+                        <th style="width: 55px;">y-o-y</th>
+                      </tr>
+                    </thead>
+                    <tbody id="doc-table-kelompok-body">
+                      <!-- Terisi oleh script -->
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="2" style="text-align: center;"><strong>UMUM (HEADLINE)</strong></td>
+                        <td class="num"><strong>100,00</strong></td>
+                        <td id="doc-tfoot-ihk" class="num">106,85</td>
+                        <td id="doc-tfoot-mtm" class="num">0,26</td>
+                        <td id="doc-tfoot-ytd" class="num">1,86</td>
+                        <td id="doc-tfoot-yoy" class="num">2,62</td>
+                        <td id="doc-tfoot-andil" class="num">0,26</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Footer Dokumen -->
+              <div style="margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem; font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between;">
+                <span>Disusun otomatis melalui sistem <strong>RAKIT</strong></span>
+                <span>Badan Pusat Statistik RI</span>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: Tabel & Simulasi -->
+    <section id="tab-data-table" class="tab-content" style="display: none;">
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">📋 Rincian 11 Kelompok Pengeluaran & Simulasi Live</h2>
+          <span style="font-size: 0.8rem; color: var(--gray-600);">Ketik di kolom untuk mengubah nilai & melihat efeknya langsung pada narasi</span>
+        </div>
+        <div class="panel-body">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Nama Kelompok (COICOP)</th>
+                  <th>Bobot (%)</th>
+                  <th>IHK Berjalan</th>
+                  <th>Inflasi m-t-m</th>
+                  <th>Inflasi y-o-y</th>
+                  <th>Andil Inflasi (%)</th>
+                </tr>
+              </thead>
+              <tbody id="raw-table-body">
+                <!-- Terisi script -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Pratinjau Dokumen Penuh -->
+    <section id="tab-full-doc" class="tab-content" style="display: none;">
+      <div style="max-width: 860px; margin: 0 auto;">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem; gap: 0.5rem;">
+          <button onclick="window.print()" class="btn btn-primary">🖨️ Cetak Halaman Penuh / Simpan PDF</button>
+        </div>
+        <div class="brs-preview-paper" style="box-shadow: var(--shadow-lg);">
+          <!-- Kloning tampilan dokumen -->
+          <div style="text-align: center; color: var(--gray-500); padding: 1rem;">
+            Silakan beralih ke tab <strong>Susun BRS</strong> untuk melihat pratinjau live side-by-side, atau klik <strong>Cetak</strong> untuk versi cetak bersih A4.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Metodologi & Panduan -->
+    <section id="tab-about" class="tab-content" style="display: none;">
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">ℹ️ Metodologi & Spesifikasi RAKIT</h2>
+        </div>
+        <div class="panel-body" style="font-size: 0.92rem; line-height: 1.8;">
+          <h3 style="margin-bottom: 0.5rem; color: var(--gray-900);">Tentang RAKIT</h3>
+          <p>
+            <strong>RAKIT</strong> (<em>Rangkai Angka dan Kompilasi IHK Terpadu</em>) adalah platform otomatisasi pembuatan Berita Resmi Statistik (BRS) Indeks Harga Konsumen (IHK) yang menggabungkan kalkulasi statistik, penyusunan narasi cerdas bebas kesalahan ketik, tabel standar baku, dan ekspor dokumen siap rilis.
+          </p>
+
+          <h3 style="margin: 1.5rem 0 0.5rem 0; color: var(--gray-900);">Rumus Dasar Penghitungan</h3>
+          <ul style="margin-left: 1.5rem; color: var(--gray-700);">
+            <li><strong>Tingkat Inflasi Bulanan (m-to-m)</strong>: <code>((IHK_t / IHK_{t-1}) - 1) &times; 100%</code></li>
+            <li><strong>Tingkat Inflasi Tahun Kalender (y-t-d)</strong>: <code>((IHK_t / IHK_{Des_t-1}) - 1) &times; 100%</code></li>
+            <li><strong>Tingkat Inflasi Tahun ke Tahun (y-on-y)</strong>: <code>((IHK_t / IHK_{t-12}) - 1) &times; 100%</code></li>
+            <li><strong>Andil Komponen</strong>: Kontribusi masing-masing kelompok atau komoditas terhadap laju inflasi umum (headline).</li>
+          </ul>
+
+          <h3 style="margin: 1.5rem 0 0.5rem 0; color: var(--gray-900);">Dokumen PRD Terkait</h3>
+          <p>
+            Spesifikasi kebutuhan lengkap sistem ini didokumentasikan di berkas <code>PRD-SISADA-BRS.md</code> pada repositori proyek.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
