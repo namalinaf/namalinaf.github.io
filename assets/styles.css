@@ -223,6 +223,14 @@ p { margin: 0 0 1rem; color: var(--text); }
 .card p:last-child { margin-bottom: 0; }
 .card .meta { color: var(--muted); font-size: .85rem; margin: .25rem 0 0; }
 
+.card-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.card-link:hover,
+.card-link:focus-visible { text-decoration: underline; }
+
 .empty-state {
   border: 1px dashed var(--line);
   border-radius: .9rem;

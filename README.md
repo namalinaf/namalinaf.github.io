@@ -22,7 +22,7 @@ Tanpa framework, tanpa build step, tanpa dependensi eksternal.
 ## Mengedit
 
 - **Nama, bio, keahlian:** sunting teks langsung di `index.html`.
-- **Email:** ganti semua `alamat@email.com` dengan email Anda.
+- **Email:** `kayanyainilina@gmail.com`, muncul di tombol hero dan bagian Kontak.
 - **Menambah proyek:** salin blok `<article class="card">` yang ada di komentar
   bagian `#proyek`, lalu isi judul, deskripsi, dan metadata.
 - **Warna aksen:** ubah `--accent` dan `--accent-soft` di `assets/styles.css`.
