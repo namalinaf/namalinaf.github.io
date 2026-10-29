@@ -7,6 +7,7 @@
   <meta name="description" content="RAKIT: Rangkai Angka dan Kompilasi IHK Terpadu — Solusi otomatisasi penyusunan Berita Resmi Statistik (BRS) Indeks Harga Konsumen.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -25,11 +26,12 @@
         <div class="select-group">
           <label for="select-region">Wilayah:</label>
           <select id="select-region" class="select-input">
+            <option value="1114" selected>1114 — Kab. Aceh Tamiang (Data Sampel Real)</option>
             <option value="00">00 — Nasional (90 Kota IHK)</option>
             <option value="31">31 — DKI Jakarta</option>
+            <option value="12">12 — Sumatera Utara</option>
             <option value="32">32 — Jawa Barat</option>
             <option value="35">35 — Jawa Timur</option>
-            <option value="12">12 — Sumatera Utara</option>
             <option value="73">73 — Sulawesi Selatan</option>
           </select>
         </div>
@@ -37,8 +39,9 @@
         <div class="select-group">
           <label for="select-period">Periode:</label>
           <select id="select-period" class="select-input">
+            <option value="2025_09" selected>September 2025</option>
             <option value="2026_10">Oktober 2026</option>
-            <option value="2026_09" disabled>September 2026 (Arsip)</option>
+            <option value="2026_09">September 2026</option>
           </select>
         </div>
 
@@ -70,14 +73,46 @@
     <!-- Status & Validation Live Bar -->
     <section class="status-bar">
       <div class="status-pills">
-        <span class="pill pill-success">✓ Data Tervalidasi</span>
+        <span id="pill-status-file" class="pill pill-success">✓ Data Siap</span>
         <span id="pill-bobot" class="pill pill-success">Bobot: 100,00% ✓</span>
         <span id="pill-rekon" class="pill pill-success">Rekonsiliasi: 0,00% ✓</span>
         <span class="pill pill-info">Tahun Dasar 2022=100</span>
       </div>
       <div>
         <span style="font-size: 0.8rem; color: var(--gray-500);">Status Naskah:</span>
-        <strong style="font-size: 0.82rem; color: var(--primary);">DRAF TERVERIFIKASI</strong>
+        <strong id="badge-status-naskah" style="font-size: 0.82rem; color: var(--primary);">DRAF TERVERIFIKASI</strong>
+      </div>
+    </section>
+
+    <!-- Upload Panel: Berkas Pusat & Template -->
+    <section class="upload-panel">
+      <div class="upload-grid">
+        <div class="dropzone-box" onclick="document.getElementById('input-file-pusat').click()">
+          <span class="dropzone-icon">📥</span>
+          <div class="dropzone-text">
+            <span class="dropzone-title">1. File Bahan Rilis dari Pusat (.xlsx)</span>
+            <span id="label-file-pusat" class="dropzone-sub">Klik atau drag file (misal: 1114 09 Bahan Rilis Inflasi...)</span>
+          </div>
+          <input type="file" id="input-file-pusat" accept=".xlsx,.xls" style="display: none;">
+        </div>
+
+        <div class="dropzone-box" onclick="document.getElementById('input-file-template').click()">
+          <span class="dropzone-icon">📑</span>
+          <div class="dropzone-text">
+            <span class="dropzone-title">2. File Template IHK Tahun Lalu (.xlsx)</span>
+            <span id="label-file-template" class="dropzone-sub">Opsional — Otomatis dihitung jika kosong/placeholder "."</span>
+          </div>
+          <input type="file" id="input-file-template" accept=".xlsx,.xls" style="display: none;">
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button id="btn-load-sample" class="btn btn-outline btn-sm" title="Muat data sampel resmi Kab. Aceh Tamiang Sep 2025">
+            🎯 Sampel Real Aceh Tamiang
+          </button>
+          <button id="btn-process-upload" class="btn btn-primary btn-sm">
+            ⚡ Proses Data
+          </button>
+        </div>
       </div>
     </section>
 
@@ -169,6 +204,13 @@
             </div>
           </div>
           <div class="panel-body">
+            <div class="section-switch">
+              <button class="sec-btn active" data-sec="all">📄 Semua Halaman</button>
+              <button class="sec-btn" data-sec="h2">Hal 2: Headline</button>
+              <button class="sec-btn" data-sec="h3">Hal 3: Tabel 1</button>
+              <button class="sec-btn" data-sec="h4">Hal 4: Komoditas</button>
+              <button class="sec-btn" data-sec="h5">Hal 5: 11 Kelompok</button>
+            </div>
             <div class="editor-toolbar">
               <span style="font-size: 0.78rem; color: var(--gray-500); align-self: center;">
                 Badge warna menunjukkan angka terkunci yang otomatis sinkron dengan data:
