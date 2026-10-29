@@ -113,8 +113,8 @@ body {
   stroke-linecap: round;
 }
 
-[data-theme="dark"] .icon-sun,
-:root:not([data-theme="dark"]) .icon-moon { display: none; }
+[data-theme="dark"] .icon-moon,
+:root:not([data-theme="dark"]) .icon-sun { display: none; }
 
 main { padding-block: 3.5rem 4rem; }
 
@@ -191,6 +191,9 @@ p { margin: 0 0 1rem; color: var(--text); }
   color: #fff;
 }
 .btn-primary:hover { filter: brightness(1.08); color: #fff; }
+
+[data-theme="dark"] .btn-primary { color: #06211a; }
+[data-theme="dark"] .btn-primary:hover { color: #06211a; }
 
 .chips {
   list-style: none;
